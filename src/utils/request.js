@@ -1,6 +1,6 @@
 import axios from "axios";
 import { getToken, removeToken } from "./token";
-import router from "@/router";
+
 //1.根域名配置
 //2.超时时间
 //3.请求拦截器 / 响应拦截器
