@@ -20,7 +20,7 @@ const Login = () => {
       <Card className="login-container">
         <img className="login-logo" src={logo} alt="" />
         {/* 登录表单 */}
-        <Form validateTrigger="onBlur">
+        <Form validateTrigger="onBlur" onFinish={onFinish}>
           <Form.Item
             name="mobile"
             rules={[
@@ -29,10 +29,11 @@ const Login = () => {
                     message: "请输入手机号"
                 },
                 {
-                    pattern:/^1[3-9]\d{9}$/
+                    pattern:/^1[3-9]\d{9}$/,
+                    message:"请输入正确的手机号"
                 }
             ]}
-            onFinish={onFinish}
+            
           >
             <Input size="large" placeholder="请输入手机号" />
           </Form.Item>

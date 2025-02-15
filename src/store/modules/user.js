@@ -1,6 +1,6 @@
 import { getToken, setToken as _setToken, request } from "@/utils"
-import { createReducer } from "@reduxjs/toolkit"
-const userStore = createReducer({
+import { createSlice } from "@reduxjs/toolkit"
+const userStore = createSlice({
     name:'user',
     initialState:{
         token: getToken() || ''
