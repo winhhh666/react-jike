@@ -19,7 +19,7 @@ const fetchLogin = (loginForm) => {
         //1.发送异步请求
         const res = await request.post('/authorizations', loginForm)
         //2.提交同步action进行token的存入
-        dispatch(setToken(res.data.data.token));
+        dispatch(setToken(res.data.token));
     }
 }
 

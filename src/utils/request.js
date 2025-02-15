@@ -5,7 +5,7 @@ import { getToken } from "./token";
 //3.请求拦截器 / 响应拦截器
 
 const request = axios.create({
-    baseURL: 'http//geek.itheima.net/v1_0',
+    baseURL: 'http://geek.itheima.net/v1_0',
     timeout: 5000
 })
 

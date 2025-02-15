@@ -43,6 +43,7 @@ const Login = () => {
                  {
                      required:true,
                      message: "请输入验证码"
+                    //  要求是必须246810
                  }
              ]}
           >
