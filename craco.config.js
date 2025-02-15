@@ -7,7 +7,12 @@ module.exports = {
             //约定：使用@ 表示src文件所在路径
             alias: {
                 '@':path.resolve(__dirname, 'src')
-            }
+            },
+            devServer: {
+                client: {
+                  overlay: false,
+                },
+              },
         
     }
 }
