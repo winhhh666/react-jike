@@ -15,19 +15,13 @@ import {
   import './index.scss'
   import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-import { createArticleAPI, getChannelAPI } from '@/apis/article'
-import { useEffect, useRef, useState } from 'react'
+import { createArticleAPI} from '@/apis/article'
+import {  useRef, useState } from 'react'
+import { useChannel } from '@/hooks/useChannel'
   const { Option } = Select
   
   const Publish = () => {
-    const [channels, setChannels] = useState([])
-    useEffect(() => {
-        const fetchChannels= async() => {
-        const res = await getChannelAPI();
-        setChannels(res.data.channels);
-        }
-        fetchChannels();
-    }, [])
+    const {channels} = useChannel();
     const onFinish = (formValue) =>{
         if(imageList.length !== imageType) return message.warning("图片类型与数量不一致");
         const {channels_id, content, title} = formValue;
