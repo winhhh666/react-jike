@@ -7,3 +7,12 @@ export function getChannelAPI() {
 
     })
 }
+
+export function createArticleAPI(params) {
+
+    return request({
+        url:"/mp/articles?draft=false",
+        method: "POST",
+        data: params
+    })
+}
