@@ -49,10 +49,10 @@ import { useEffect, useRef, useState } from 'react'
     const [imageType, setImageType] = useState(0);
     const onTypeChange = (e) => {
         setImageType(e.target.value);
-        if(type === 1) {
+        if(imageType === 1) {
             const imgList = cacheImageList.current[0]?[cacheImageList.current[0]]:[];
             setImageList(imgList);
-        } else if (type === 3) {
+        } else if (imageType === 3) {
             //三图
             setImageList(cacheImageList.current);
         }
