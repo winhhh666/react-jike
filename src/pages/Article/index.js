@@ -6,6 +6,8 @@ import { Table, Tag, Space } from 'antd'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import img404 from '@/assets/error.png'
 import { useChannel } from '@/hooks/useChannel'
+import { getArticlesAPI } from '@/apis/article'
+import { useEffect, useState } from 'react'
 
 const { Option } = Select
 const { RangePicker } = DatePicker
@@ -65,20 +67,19 @@ const Article = () => {
     }
   ]
   // 准备表格body数据
-  const data = [
-    {
-      id: '8218',
-      comment_count: 0,
-      cover: {
-        images: [],
-      },
-      like_count: 0,
-      pubdate: '2019-03-11 09:00:00',
-      read_count: 2,
-      status: 2,
-      title: 'wkwebview离线化加载h5资源解决方案'
+  const [data, setData] = useState({})
+
+  useEffect(() => {
+    const fetchArticles= async() =>{
+        const res = await getArticlesAPI();
+        console.log(res)
+        setData(res.data);
     }
-  ]
+    fetchArticles();
+  }, [])
+
+  const articles = data.results;
+  const count = data.total_count;
   const{ channels} = useChannel();
   return (
     <div>
@@ -91,7 +92,7 @@ const Article = () => {
         }
         style={{ marginBottom: 20 }}
       >
-        <Form initialValues={{ status: null }}>
+        <Form initialValues={{ status: '' , channel_id: ''}}>
           <Form.Item label="状态" name="status">
             <Radio.Group>
               <Radio value={''}>全部</Radio>
@@ -103,7 +104,6 @@ const Article = () => {
           <Form.Item label="频道" name="channel_id">
             <Select
               placeholder="请选择文章频道"
-              defaultValue=""
               style={{ width: 120 }}
             >
                 {channels.map(item =>  <Option key={item.id} value={item.id}>{item.name}</Option>)}
@@ -125,8 +125,8 @@ const Article = () => {
       </Card>
       <div>
       {/*        */}
-      <Card title={`根据筛选条件共查询到 count 条结果：`}>
-        <Table rowKey="id" columns={columns} dataSource={data} />
+      <Card title={`根据筛选条件共查询到 ${count} 条结果：`}>
+        <Table rowKey="id" columns={columns} dataSource={articles} />
       </Card>
     </div>
     </div>

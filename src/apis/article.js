@@ -16,3 +16,11 @@ export function createArticleAPI(params) {
         data: params
     })
 }
+
+
+export function getArticlesAPI() {
+    return request({
+        url:"/mp/articles",
+        method: "GET",
+    })
+}
