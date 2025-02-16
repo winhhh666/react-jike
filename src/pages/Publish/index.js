@@ -39,6 +39,14 @@ import { useEffect, useState } from 'react'
         createArticleAPI(params);
 
     }
+    const [imageList, setImageList] = useState([]);
+    const onUploadChange = (info) => {
+        setImageList(info.fileList);
+    }
+    const [imageType, setImageType] = useState(0);
+    const onTypeChange = (e) => {
+        setImageType(e.target.value);
+    }
     return (
       <div className="publish">
         <Card
@@ -53,7 +61,7 @@ import { useEffect, useState } from 'react'
           <Form
             labelCol={{ span: 4 }}
             wrapperCol={{ span: 16 }}
-            initialValues={{ type: 1 }}
+            initialValues={{ type: 0 }}
             onFinish={onFinish}
           >
             <Form.Item
@@ -72,6 +80,27 @@ import { useEffect, useState } from 'react'
                 {channels.map(item =><Option key={item.id} value={item.id}>{item.name}</Option>)}
               </Select>
             </Form.Item>
+
+            <Form.Item label="封面">
+                <Form.Item name="type">
+                    <Radio.Group onChange={onTypeChange}>
+                    <Radio value={1}>单图</Radio>
+                    <Radio value={3}>三图</Radio>
+                    <Radio value={0}>无图</Radio>
+                    </Radio.Group>
+                </Form.Item>
+              { imageType>0 && <Upload
+                    listType="picture-card"
+                    showUploadList
+                    name='image'
+                    action={'http://geek.itheima.net/v1_0/upload'}
+                    onChange={onUploadChange}
+                >
+                    <div style={{ marginTop: 8 }}>
+                    <PlusOutlined />
+                    </div>
+                </Upload>}
+                </Form.Item>
             <Form.Item
               label="内容"
               name="content"
