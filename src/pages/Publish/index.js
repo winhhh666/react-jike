@@ -14,10 +14,20 @@ import {
   import './index.scss'
   import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-
+import { getChannelAPI } from '@/apis/article'
+import { useEffect, useState } from 'react'
   const { Option } = Select
   
   const Publish = () => {
+    const [channels, setChannels] = useState([])
+    useEffect(() => {
+        const fetchChannels= async() => {
+        const res = await getChannelAPI();
+        setChannels(res.data.channels);
+        }
+        fetchChannels();
+    }, [])
+
     return (
       <div className="publish">
         <Card
@@ -47,7 +57,7 @@ import 'react-quill/dist/quill.snow.css'
               rules={[{ required: true, message: '请选择文章频道' }]}
             >
               <Select placeholder="请选择文章频道" style={{ width: 400 }}>
-                <Option value={0}>推荐</Option>
+                {channels.map(item =><Option key={item.id} value={item.id}>{item.name}</Option>)}
               </Select>
             </Form.Item>
             <Form.Item
