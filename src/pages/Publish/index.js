@@ -7,7 +7,8 @@ import {
     Input,
     Upload,
     Space,
-    Select
+    Select,
+    message
   } from 'antd'
   import { PlusOutlined } from '@ant-design/icons'
   import { Link } from 'react-router-dom'
@@ -15,7 +16,7 @@ import {
   import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { createArticleAPI, getChannelAPI } from '@/apis/article'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
   const { Option } = Select
   
   const Publish = () => {
@@ -28,12 +29,13 @@ import { useEffect, useState } from 'react'
         fetchChannels();
     }, [])
     const onFinish = (formValue) =>{
+        if(imageList.length !== imageType) return message.warning("图片类型与数量不一致");
         const {channels_id, content, title} = formValue;
         const params = {
             channels_id, content, title,
             cover: {
-                type: 0,
-                images: []
+                type: imageType,
+                images: imageList.map(item => item.response.data.url)
               },
         }
         createArticleAPI(params);
@@ -42,11 +44,23 @@ import { useEffect, useState } from 'react'
     const [imageList, setImageList] = useState([]);
     const onUploadChange = (info) => {
         setImageList(info.fileList);
+        cacheImageList.current = info.fileList;
     }
     const [imageType, setImageType] = useState(0);
     const onTypeChange = (e) => {
         setImageType(e.target.value);
+        if(type === 1) {
+            const imgList = cacheImageList.current[0]?[cacheImageList.current[0]]:[];
+            setImageList(imgList);
+        } else if (type === 3) {
+            //三图
+            setImageList(cacheImageList.current);
+        }
     }
+
+    //上传图片
+    const cacheImageList = useRef([]);
+
     return (
       <div className="publish">
         <Card
@@ -96,6 +110,8 @@ import { useEffect, useState } from 'react'
                     action={'http://geek.itheima.net/v1_0/upload'}
                     onChange={onUploadChange}
                     maxCount={imageType}
+                    fileList={imageList}
+                    multiple={imageType > 1}
                 >
                     <div style={{ marginTop: 8 }}>
                     <PlusOutlined />
