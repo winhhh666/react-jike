@@ -46,3 +46,11 @@ export function delArticleAPI(id){
         method:"DELETE"
     })
 }
+
+export function edictArticleAPI(params, id){
+    return request({
+        url:`/mp/articles/${id}?draft=false`,
+        method: "PUT",
+        data: params
+    })
+}

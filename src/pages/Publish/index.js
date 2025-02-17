@@ -15,7 +15,7 @@ import {
   import './index.scss'
   import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-import { createArticleAPI, getArticleDataAPI} from '@/apis/article'
+import { createArticleAPI, edictArticleAPI, getArticleDataAPI} from '@/apis/article'
 import {  useEffect, useRef, useState } from 'react'
 import { useChannel } from '@/hooks/useChannel'
   const { Option } = Select
@@ -48,10 +48,22 @@ import { useChannel } from '@/hooks/useChannel'
             channel_id, content, title,
             cover: {
                 type: imageType,
-                images: imageList.map(item => item.response.data.url)
+                images: imageList.map(item => {
+                  if(id){
+                    return item.url
+                  }else {
+                    return item.response.data.url
+                  }
+                  })
               },
         }
-        createArticleAPI(params);
+        if(id){
+          edictArticleAPI(params, id);
+          
+        }else{
+          createArticleAPI(params);
+        }
+       
 
     }
     const [imageList, setImageList] = useState([]);
