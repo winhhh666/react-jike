@@ -23,10 +23,13 @@ import { useChannel } from '@/hooks/useChannel'
   const Publish = () => {
     const [params] = useSearchParams();
     const id = params.get('id');
+    
     const [form] = Form.useForm()
     useEffect(() => {
+      if(id === 'null' || !id) return ;
       const fetchArticleData = async()=> {
         const res = await getArticleDataAPI(id);
+        console.log(res.data);
         const { cover, ...formValue } = res.data
         // 设置表单数据
         form.setFieldsValue({ ...formValue, type: cover.type })
@@ -40,9 +43,9 @@ import { useChannel } from '@/hooks/useChannel'
     const {channels} = useChannel();
     const onFinish = (formValue) =>{
         if(imageList.length !== imageType) return message.warning("图片类型与数量不一致");
-        const {channels_id, content, title} = formValue;
+        const {channel_id, content, title} = formValue;
         const params = {
-            channels_id, content, title,
+            channel_id, content, title,
             cover: {
                 type: imageType,
                 images: imageList.map(item => item.response.data.url)
@@ -53,6 +56,7 @@ import { useChannel } from '@/hooks/useChannel'
     }
     const [imageList, setImageList] = useState([]);
     const onUploadChange = (info) => {
+      console.log(info)
         setImageList(info.fileList);
         cacheImageList.current = info.fileList;
     }
@@ -77,7 +81,7 @@ import { useChannel } from '@/hooks/useChannel'
           title={
             <Breadcrumb items={[
               { title: <Link to={'/'}>首页</Link> },
-              { title: '发布文章' },
+              { title: id ? "编辑文章":'发布文章' },
             ]}
             />
           }
