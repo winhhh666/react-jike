@@ -8,6 +8,7 @@ import img404 from '@/assets/error.png'
 import { useChannel } from '@/hooks/useChannel'
 import { getArticlesAPI } from '@/apis/article'
 import { useEffect, useState } from 'react'
+import { formToJSON } from 'axios'
 
 const { Option } = Select
 const { RangePicker } = DatePicker
@@ -17,7 +18,7 @@ const Article = () => {
      const status = {
         1: <Tag color="green">待审核</Tag>,
         2: <Tag color="green">审核通过</Tag>
-     }
+     } 
   const columns = [
     {
       title: '封面',
@@ -72,19 +73,43 @@ const Article = () => {
   ]
   // 准备表格body数据
   const [data, setData] = useState({})
-
+  const [reqData, setReqData] = useState({
+    status: '',
+    channels_id: "",
+    begin_pubdate: "",
+    end_pubdate:'',
+    page:1,
+    per_page:4
+  })
   useEffect(() => {
     const fetchArticles= async() =>{
-        const res = await getArticlesAPI();
-        console.log(res)
+        const res = await getArticlesAPI(reqData);
         setData(res.data);
     }
     fetchArticles();
-  }, [])
+  }, [reqData])
 
   const articles = data.results;
   const count = data.total_count;
   const{ channels} = useChannel();
+
+  const onFinish = (formValue) => {
+    setReqData({
+        ...reqData,
+        channels_id:formValue.data,
+        status:formValue.status,
+        begin_pubdate:formValue.data[0].format("YY-MM-DD"),
+        end_pubdate: formValue.data[1].format('YY-MM-DD')
+    })
+  }
+
+  const pageChange = (page) => {
+    console.log(page)
+    setReqData({
+        ...reqData,
+        page
+    })
+  }
   return (
     <div>
       <Card
@@ -96,7 +121,7 @@ const Article = () => {
         }
         style={{ marginBottom: 20 }}
       >
-        <Form initialValues={{ status: '' , channel_id: ''}}>
+        <Form initialValues={{ status: '' , channel_id: ''}} onFinish={onFinish}>
           <Form.Item label="状态" name="status">
             <Radio.Group>
               <Radio value={''}>全部</Radio>
@@ -130,7 +155,14 @@ const Article = () => {
       <div>
       {/*        */}
       <Card title={`根据筛选条件共查询到 ${count} 条结果：`}>
-        <Table rowKey="id" columns={columns} dataSource={articles} />
+        <Table rowKey="id" columns={columns} dataSource={articles}
+        pagination={{
+            current:reqData.page,
+            pageSize:reqData.per_page,
+            onChange:pageChange,
+            total:count
+        }}
+        />
       </Card>
     </div>
     </div>

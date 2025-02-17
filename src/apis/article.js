@@ -18,9 +18,13 @@ export function createArticleAPI(params) {
 }
 
 
-export function getArticlesAPI() {
+export function getArticlesAPI(params) {
+    const searchParams = new URLSearchParams(params);
+    
+    // 拼接到 URL 中
+    const url = `/mp/articles${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
     return request({
-        url:"/mp/articles",
+        url,
         method: "GET",
     })
 }
