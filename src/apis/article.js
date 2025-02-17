@@ -29,6 +29,17 @@ export function getArticlesAPI(params) {
     })
 }
 
+export function getArticleDataAPI(id) {
+   
+    
+    // 拼接到 URL 中
+    const url = `/mp/articles/${id}`;
+    return request({
+        url,
+        method: "GET",
+    })
+}
+
 export function delArticleAPI(id){
     return request({
         url: `/mp/articles/${id}`,

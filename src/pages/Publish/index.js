@@ -11,16 +11,29 @@ import {
     message
   } from 'antd'
   import { PlusOutlined } from '@ant-design/icons'
-  import { Link } from 'react-router-dom'
+  import { Link, useSearchParams } from 'react-router-dom'
   import './index.scss'
   import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-import { createArticleAPI} from '@/apis/article'
-import {  useRef, useState } from 'react'
+import { createArticleAPI, getArticleDataAPI} from '@/apis/article'
+import {  useEffect, useRef, useState } from 'react'
 import { useChannel } from '@/hooks/useChannel'
   const { Option } = Select
   
   const Publish = () => {
+    const [params] = useSearchParams();
+    const id = params.get('id');
+    const [form] = Form.useForm
+    useEffect(() => {
+      const fetchArticleData = async()=> {
+        const res = await getArticleDataAPI();
+        const { cover, ...formValue } = res.data
+        // 设置表单数据
+        form.setFieldsValue({ ...formValue, type: cover.type })
+      }
+      fetchArticleData();
+    }, [id, form])
+ 
     const {channels} = useChannel();
     const onFinish = (formValue) =>{
         if(imageList.length !== imageType) return message.warning("图片类型与数量不一致");
@@ -71,6 +84,7 @@ import { useChannel } from '@/hooks/useChannel'
             wrapperCol={{ span: 16 }}
             initialValues={{ type: 0 }}
             onFinish={onFinish}
+            form={form}
           >
             <Form.Item
               label="标题"
