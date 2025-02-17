@@ -1,24 +1,28 @@
 import { Link } from 'react-router-dom'
-import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select } from 'antd'
+import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Popconfirm } from 'antd'
 import locale from 'antd/es/date-picker/locale/zh_CN'
 // 导入资源
 import { Table, Tag, Space } from 'antd'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import img404 from '@/assets/error.png'
 import { useChannel } from '@/hooks/useChannel'
-import { getArticlesAPI } from '@/apis/article'
+import { delArticleAPI, getArticlesAPI } from '@/apis/article'
 import { useEffect, useState } from 'react'
-import { formToJSON } from 'axios'
 
 const { Option } = Select
 const { RangePicker } = DatePicker
-
 const Article = () => {
      // 准备列数据
      const status = {
         1: <Tag color="green">待审核</Tag>,
         2: <Tag color="green">审核通过</Tag>
      } 
+     const onConfirm = async(data) =>{
+        await delArticleAPI(data.id);
+        setReqData({
+          ...reqData
+        })
+     }
   const columns = [
     {
       title: '封面',
@@ -57,15 +61,23 @@ const Article = () => {
     {
       title: '操作',
       render: data => {
+
+        console.log(data);
         return (
           <Space size="middle">
             <Button type="primary" shape="circle" icon={<EditOutlined />} />
+            <Popconfirm title="删除文章" description="确认删除当前文章吗？" onConfirm={()=> onConfirm(data)}
+                okText="Yes"
+                cancelText="No"
+                >
             <Button
               type="primary"
               danger
               shape="circle"
               icon={<DeleteOutlined />}
             />
+            </Popconfirm>
+            
           </Space>
         )
       }
