@@ -23,13 +23,16 @@ import { useChannel } from '@/hooks/useChannel'
   const Publish = () => {
     const [params] = useSearchParams();
     const id = params.get('id');
-    const [form] = Form.useForm
+    const [form] = Form.useForm()
     useEffect(() => {
       const fetchArticleData = async()=> {
-        const res = await getArticleDataAPI();
+        const res = await getArticleDataAPI(id);
         const { cover, ...formValue } = res.data
         // 设置表单数据
         form.setFieldsValue({ ...formValue, type: cover.type })
+        setImageType(cover.type);
+        setImageList(cover.images.map(url => {return {url}}));
+
       }
       fetchArticleData();
     }, [id, form])
